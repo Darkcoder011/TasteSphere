@@ -38,8 +38,8 @@ TasteSphere is an intelligent recommendation platform that uses AI to understand
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/tastesphere.git
-   cd tastesphere
+   git clone https://github.com/Darkcoder011/TasteSphere.git
+   cd TasteSphere
    ```
 
 2. Install dependencies:
