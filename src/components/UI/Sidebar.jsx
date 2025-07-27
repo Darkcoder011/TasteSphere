@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react';
+import { Fragment, useMemo, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon, SparklesIcon, AdjustmentsHorizontalIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { useApp } from '../../context/AppContext';
@@ -23,8 +23,14 @@ const Sidebar = () => {
     entities, 
     activeFilter, 
     setActiveFilter,
-    messages
+    messages,
+    setSidebarOpen
   } = useApp();
+  
+  // Ensure the sidebar is closed on initial render
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [setSidebarOpen]);
   
   // Close sidebar when a filter is selected on mobile
   const handleFilterSelect = (filter) => {
@@ -73,7 +79,7 @@ const Sidebar = () => {
   // Render mobile sidebar
   const renderMobileSidebar = () => (
     <Transition.Root show={isSidebarOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50 lg:hidden" onClose={closeSidebar}>
+      <Dialog as="div" className="relative z-50 lg:hidden" onClose={closeSidebar || (() => {})}>
         <Transition.Child
           as={Fragment}
           enter="transition-opacity ease-linear duration-300"
@@ -83,7 +89,7 @@ const Sidebar = () => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-900/80" />
+          <div className="fixed inset-0 bg-gray-900/80" onClick={closeSidebar} />
         </Transition.Child>
 
         <div className="fixed inset-0 flex">

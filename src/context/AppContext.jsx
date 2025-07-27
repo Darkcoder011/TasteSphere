@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
 import { analyzeWithGemini } from '../utils/gemini';
 import { fetchRecommendations } from '../utils/qloo';
 
@@ -32,8 +32,31 @@ export const AppProvider = ({ children }) => {
   
   // Toggle dark mode
   const toggleDarkMode = useCallback(() => {
-    setDarkMode(prev => !prev);
-    document.documentElement.classList.toggle('dark');
+    setDarkMode(prev => {
+      const newDarkMode = !prev;
+      // Save preference to localStorage
+      if (newDarkMode) {
+        localStorage.theme = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        localStorage.theme = 'light';
+        document.documentElement.classList.remove('dark');
+      }
+      return newDarkMode;
+    });
+  }, []);
+  
+  // Initialize dark mode from localStorage or system preference
+  useEffect(() => {
+    if (localStorage.theme === 'dark' || 
+        (!('theme' in localStorage) && 
+         window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      setDarkMode(true);
+    } else {
+      document.documentElement.classList.remove('dark');
+      setDarkMode(false);
+    }
   }, []);
   
   // Toggle sidebar
@@ -180,6 +203,11 @@ export const AppProvider = ({ children }) => {
     }
   }, [isLoading, analyzeWithGeminiAndFetchRecs, addMessage]);
   
+  // Close sidebar
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
   // Memoized context value
   const contextValue = useMemo(() => ({
     // State
@@ -195,9 +223,11 @@ export const AppProvider = ({ children }) => {
     // Actions
     toggleDarkMode,
     toggleSidebar,
+    closeSidebar,
     processUserInput,
     clearChat,
     setActiveFilter,
+    setSidebarOpen, // Add this line to expose setSidebarOpen
     addMessage,
   }), [
     darkMode,
