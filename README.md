@@ -85,30 +85,62 @@ src/
 
 ## 🔄 Workflow
 
+Below is a visual representation of the TasteSphere workflow:
+
+![TasteSphere Workflow Diagram](./docs/workflow/tastesphere-workflow.png)
+
+For an interactive version, you can view the Mermaid diagram below:
+
+```mermaid
+flowchart TD
+    A[User Input] -->|Natural Language| B[Chat Interface]
+    B --> C[Process Input]
+    C --> D[Gemini AI]
+    D -->|Extract Entities| E[Entity Analysis]
+    E --> F{Has Entities?}
+    F -->|Yes| G[Fetch Recommendations]
+    F -->|No| H[Request More Details]
+    G -->|Qloo API| I[Process Recommendations]
+    I --> J[Display Results]
+    J --> K[User Interaction]
+    K -->|Filter/Refine| B
+    K -->|Select Item| L[Show Details]
+    
+    style A fill:#4CAF50,stroke:#388E3C
+    style B fill:#2196F3,stroke:#0D47A1
+    style D fill:#9C27B0,stroke:#4A148C
+    style G fill:#FF9800,stroke:#E65100
+    style J fill:#00BCD4,stroke:#006064
+    style K fill:#FFC107,stroke:#FF6F00
+    style L fill:#8BC34A,stroke#33691E
+```
+
 ### 1. User Input
-- User interacts with the chat interface
-- Natural language input is processed by the system
+- User interacts with the chat interface using natural language
+- Input is captured and prepared for processing
 
 ### 2. AI Processing
 1. **Entity Extraction**:
-   - User input is sent to Google's Gemini AI
-   - AI identifies entities (movies, books, etc.) and user preferences
-   - Response is parsed for entities and analysis
+   - Input is sent to Google's Gemini AI
+   - AI analyzes text to identify entities (movies, books, etc.) and preferences
+   - Response is parsed for structured data and analysis
+   - If no clear entities are found, system requests clarification
 
 2. **Recommendation Generation**:
    - Extracted entities are used to query the Qloo API
-   - If Qloo is unavailable, mock data is used as fallback
-   - Recommendations are filtered and processed
+   - Fallback to mock data if Qloo is unavailable
+   - Recommendations are processed and formatted for display
 
 ### 3. UI Update
-- Chat interface displays AI response
-- Recommendations are shown in a responsive grid
-- Interactive elements update in real-time
+- Chat interface displays AI's response and analysis
+- Recommendations are rendered in a responsive grid
+- Loading states and animations are shown during processing
 
 ### 4. User Interaction
-- Users can filter recommendations
-- Click on items for more details
-- Continue conversation to refine preferences
+- Filter recommendations by category or type
+- Click on items to view detailed information
+- Continue conversation to refine or expand recommendations
+- Clear chat or start over with new preferences
 
 ## 🧪 Testing
 
